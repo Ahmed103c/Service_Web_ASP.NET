@@ -1,0 +1,6 @@
+@PlateformeFilm_HostAddress = http://localhost:5038
+
+GET {{PlateformeFilm_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
