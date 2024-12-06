@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PlateformeFilm.Models;
+using PlateformeFilm.data;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,44 +10,50 @@ namespace PlateformeFilm.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        // Simule une base de données en mémoire
-        private static List<Utilisateur> utilisateurs = new List<Utilisateur>
+
+    private readonly UserContext _context;
+    public UserController(UserContext ctx)
+    {
+        _context = ctx;
+    }
+    //Récupérer des données 
+    [HttpGet("{id}")]
+    public async Task<ActionResult<User>> GetUser(int id)
+    {
+        // on récupère la confiture correspondant a l'id
+        var user = await _context.Users.FindAsync(id);
+
+        if (User == null)
         {
-            new Utilisateur ( "Admin",  "admin123",Role.Admin ),
-            new Utilisateur ("User1","password",Role.User )
+            return NotFound();
+        }
+        // on retourne la confiture
+        return Ok(user);
+    }
+    //Ajouter des données 
+    public class UserCreation
+    {
+        public int id { get; set; }
+        public string Pseudo { get; set; }
+        public string Password { get; set; }
+        public Role Role { get; set; }
+    }
+    [HttpPost]
+    public async Task<ActionResult<User>> PostUser(UserCreation userCreation)
+    {
+        // on créer un nouveau user avec les informations reçu
+        User user = new User {
+            Id=userCreation.id,
+            Pseudo=userCreation.Pseudo,
+            Password=userCreation.Password,
+            Role=userCreation.Role
         };
-
-        // GET: api/user/{id}
-        [HttpGet("{id}")]
-        public ActionResult<Utilisateur> Get(int id)
-        {
-            if (id < 0 || id >= utilisateurs.Count)
-                return NotFound("Utilisateur non trouvé.");
-
-            return utilisateurs[id];
-        }
-
-        // POST: api/user/register
-        [HttpPost("register")]
-        public ActionResult<Utilisateur> Register([FromBody] Utilisateur nouvelUtilisateur)
-        {
-            if (utilisateurs.Any(u => u.Pseudo == nouvelUtilisateur.Pseudo))
-                return BadRequest("Un utilisateur avec ce pseudo existe déjà.");
-
-            utilisateurs.Add(nouvelUtilisateur);
-            return CreatedAtAction(nameof(Get), new { id = utilisateurs.Count - 1 }, nouvelUtilisateur);
-        }
-
-        // POST: api/user/login
-        [HttpPost("login")]
-        public ActionResult<Utilisateur> Login([FromBody] Utilisateur credentials)
-        {
-            var utilisateur = utilisateurs.FirstOrDefault(u => u.Pseudo == credentials.Pseudo && u.MotDePasse == credentials.MotDePasse);
-
-            if (utilisateur == null)
-                return Unauthorized("Pseudo ou mot de passe incorrect.");
-
-            return Ok(utilisateur);
-        }
+        // on l'ajoute a notre contexte (BDD)
+        _context.Users.Add(user);
+        // on enregistre les modifications dans la BDD ce qui remplira le champ Id de notre objet
+        await _context.SaveChangesAsync();
+        // on retourne un code 201 pour indiquer que la création a bien eu lieu
+        return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
+    }
     }
 }

@@ -10,21 +10,19 @@ namespace PlateformeFilm.Models
     }
 
     // Définition de la classe Utilisateur
-    public class Utilisateur
+    public class User
     {
-        // Propriété pour le pseudo de l'utilisateur
+        // Propriété pour le pseudo de l'User
+        public int Id{get;set;}
         public string Pseudo { get; set; }
 
         // Propriété pour le mot de passe
-        public string MotDePasse { get; set; }
+        public string Password { get; set; }
 
-        // Propriété pour le rôle de l'utilisateur
+        // Propriété pour le rôle de l'User
         public Role Role { get; set; }
-
-        public Utilisateur(string name , string mdp , Role role){
-            Pseudo=name;
-            MotDePasse=mdp;
-            Role=role;
-        }
+        public User(){}
+       
     }
+
 }
