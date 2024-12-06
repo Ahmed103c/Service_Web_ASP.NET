@@ -20,5 +20,11 @@ namespace PlateformeFilm.Models
 
         // Propriété pour le rôle de l'utilisateur
         public Role Role { get; set; }
+
+        public Utilisateur(string name , string mdp , Role role){
+            Pseudo=name;
+            MotDePasse=mdp;
+            Role=role;
+        }
     }
 }

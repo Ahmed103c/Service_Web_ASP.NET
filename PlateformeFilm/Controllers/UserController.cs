@@ -12,8 +12,8 @@ namespace PlateformeFilm.Controllers
         // Simule une base de données en mémoire
         private static List<Utilisateur> utilisateurs = new List<Utilisateur>
         {
-            new Utilisateur { Pseudo = "Admin", MotDePasse = "admin123", Role = Role.Admin },
-            new Utilisateur { Pseudo = "User1", MotDePasse = "password", Role = Role.User }
+            new Utilisateur ( "Admin",  "admin123",Role.Admin ),
+            new Utilisateur ("User1","password",Role.User )
         };
 
         // GET: api/user/{id}
