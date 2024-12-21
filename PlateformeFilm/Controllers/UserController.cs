@@ -63,7 +63,7 @@ namespace PlateformeFilm.Controllers
         public int id { get; set; }
         public string Pseudo { get; set; }
         public string Password { get; set; }
-        public Role Role { get; set; }
+
     }
 
     [HttpPost("Login")]
@@ -81,29 +81,31 @@ namespace PlateformeFilm.Controllers
      }
 
 
-    //Modifier un utilisateur déja existant 
-    [HttpPut("{id}")]
-    
-    public async Task<ActionResult<User>> PutUser(User userUpdate) // c pas <IActionResult<User>>
+    public class UserUpdate : UserInfo
     {
-        // on récupère la confiture que l'on souhaite modifier
-        User user = await _context.Users.FindAsync(userUpdate.Id);
+        public Role role{get;   set;} // si on met pas les accesseurs ce attribut ne sera pas affiché a l'écran
+
+    }
+
+
+    //Modifier un utilisateur déja existant  , Attention on modifie pas son id 
+    [HttpPut("{id}")]
+
+    public async Task<ActionResult<User>> PutUser(UserUpdate userUpdate) // c pas <IActionResult<User>>
+    {
+        // on récupère l'utilisateur que l'on souhaite modifier
+        User user = await _context.Users.FindAsync(userUpdate.id);
         if (user == null)
         {
             return NotFound();
         }
-
-        // on met a jour les informations de la confiture
-
-        user.Id=userUpdate.Id;
+        // on met a jour les informations de l'utilisateur
+        user.Id=userUpdate.id;
         user.Pseudo=userUpdate.Pseudo;
         user.Password=userUpdate.Password;
-
-
-
+        user.Role=userUpdate.role;
         // on indique a notre contexte que l'objet a été modifié
         _context.Entry(user).State = EntityState.Modified;
-
         try
         {
             // on enregistre les modifications
@@ -117,6 +119,7 @@ namespace PlateformeFilm.Controllers
         // on retourne un code 200 pour indiquer que la modification a bien eu lieu
         return Ok(user);
     }
+
     //Supprimer les Données 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteConfiture(int id)
