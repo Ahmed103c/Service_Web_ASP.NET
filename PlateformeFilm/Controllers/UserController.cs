@@ -21,14 +21,14 @@ namespace PlateformeFilm.Controllers
     [HttpGet("{id}")]
     public async Task<ActionResult<User>> GetUser(int id)
     {
-        // on récupère la confiture correspondant a l'id
+        // on récupère l'utilisateur correspondant a l'id
         var user = await _context.Users.FindAsync(id);
 
         if (User == null)
         {
             return NotFound();
         }
-        // on retourne la confiture
+        // on retourne l'utilisateur
         return Ok(user);
     }
 
@@ -40,7 +40,7 @@ namespace PlateformeFilm.Controllers
         public string Password { get; set; }
         public Role Role { get; set; }
     }
-    [HttpPost]
+    [HttpPost("register")]
     public async Task<ActionResult<User>> PostUser(UserCreation userCreation)
     {
         // on créer un nouveau user avec les informations reçu
@@ -57,6 +57,28 @@ namespace PlateformeFilm.Controllers
         // on retourne un code 201 pour indiquer que la création a bien eu lieu
         return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
     }
+
+    public class UserInfo
+    {
+        public int id { get; set; }
+        public string Pseudo { get; set; }
+        public string Password { get; set; }
+        public Role Role { get; set; }
+    }
+
+    [HttpPost("Login")]
+    public async Task<ActionResult<User>> Login(UserInfo userInfo)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u =>u.Pseudo == userInfo.Pseudo && u.Password ==userInfo.Password);   
+        
+        if (user==null)
+        {
+            return Unauthorized("Identifiant ou mot de passe incorrect !!");
+        }
+        return Ok(new {message ="Login Successfully , welcome Back !",userName = user.Pseudo});
+        
+        
+     }
 
 
     //Modifier un utilisateur déja existant 
