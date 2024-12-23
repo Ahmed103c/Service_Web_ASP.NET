@@ -20,7 +20,15 @@ public class Program
         //Injection de dépendance : ajout classe PasswordHasher
         builder.Services.AddScoped<PasswordHasher<User>>();
 
+        //Connection au BDD
         builder.Services.AddDbContext<UserContext>();
+        //Ajout Films et Favorites
+        builder.Services.AddDbContext<FilmContext>();
+        //puis les commandes powershell : 
+        //$ dotnet ef migrations add InitialisationDeLaDB --context FilmContext
+        //$ dotnet ef database update --context FilmContext
+
+        builder.Services.AddDbContext<FavoriteContext>();
 
         var app = builder.Build();
 
