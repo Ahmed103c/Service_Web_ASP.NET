@@ -4,6 +4,7 @@ using PlateformeFilm.data;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Identity;
 
 namespace PlateformeFilm.Controllers
 {
@@ -47,9 +48,15 @@ namespace PlateformeFilm.Controllers
         User user = new User {
             Id=userCreation.id,
             Pseudo=userCreation.Pseudo,
-            Password=userCreation.Password,
+            Password="",
             Role=userCreation.Role
         };
+
+        //Hashage de la mdp
+        var hasher = new PasswordHasher<User>();
+        user.Password=hasher.HashPassword(user,userCreation.Password);
+
+
         // on l'ajoute a notre contexte (BDD)
         _context.Users.Add(user);
         // on enregistre les modifications dans la BDD ce qui remplira le champ Id de notre objet
@@ -69,11 +76,22 @@ namespace PlateformeFilm.Controllers
     [HttpPost("Login")]
     public async Task<ActionResult<User>> Login(UserInfo userInfo)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(u =>u.Pseudo == userInfo.Pseudo && u.Password ==userInfo.Password);   
         
+        var user = await _context.Users.FirstOrDefaultAsync(u =>u.Pseudo == userInfo.Pseudo);   
+        //Verification Existance user
         if (user==null)
         {
-            return Unauthorized("Identifiant ou mot de passe incorrect !!");
+            return Unauthorized("Identifiant incorrect !!");
+        }
+        else
+        {     
+            //Verification Mdp
+            var hasher =new PasswordHasher<User>();
+            var cond = hasher.VerifyHashedPassword(user, user.Password, userInfo.Password);
+            if (cond==PasswordVerificationResult.Failed)
+            {
+                return Unauthorized("Mot de passe Incorrect");
+            }
         }
         return Ok(new {message ="Login Successfully , welcome Back !",userName = user.Pseudo});
         
