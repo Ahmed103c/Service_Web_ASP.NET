@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PlateformeFilm")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+77e5cebd3eb530032652051003c0c164a12256d7")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d88d48de6ae309d630f190b33deef2333f4a98d5")]
 [assembly: System.Reflection.AssemblyProductAttribute("PlateformeFilm")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PlateformeFilm")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

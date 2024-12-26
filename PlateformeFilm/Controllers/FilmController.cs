@@ -23,9 +23,10 @@ namespace PlateformeFilm.Controllers
             // on récupère l'utilisateur correspondant a l'id
             var film = await _context.Films.FindAsync(id);
 
-            if (User == null)
+            if (film == null)
             {
-                return NotFound();
+                // return NotFound("Id n'est pas trouvable ! ");
+                return  Unauthorized("Identifiant Incorrect");
             }
             // on retourne l'utilisateur
             return Ok(film);
