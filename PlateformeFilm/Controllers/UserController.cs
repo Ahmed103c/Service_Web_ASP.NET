@@ -140,7 +140,7 @@ namespace PlateformeFilm.Controllers
 
         //Supprimer les Données 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteConfiture(int id)
+        public async Task<IActionResult> DeleteUser(int id)
         {
             // on récupère la user que l'on souhaite supprimer
             User user = await _context.Users.FindAsync(id);

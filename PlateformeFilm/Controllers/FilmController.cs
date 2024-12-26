@@ -31,21 +31,54 @@ namespace PlateformeFilm.Controllers
             // on retourne l'utilisateur
             return Ok(film);
         }
+        [HttpGet("All")]
+        public async Task<ActionResult<Film>> GetFilmAll()
+        {
+            // on récupère l'utilisateur correspondant a l'id
+            //var film = await _context.Films.FindAsync();
+            List<Film> films=await _context.Films.ToListAsync();
+
+            if (films == null)
+            {
+                // return NotFound("Id n'est pas trouvable ! ");
+                return  Unauthorized("Identifiant Incorrect");
+            }
+            // on retourne l'utilisateur
+            return Ok(films);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
         public class FilmCreation
         {
             public int id{get;set;}
             public string Title{get;set;}
+
+            public string poster{get;set;}
+
+            public string IMBD{get;set;}
+
+            public int dateDeSortie{get;set;}
         }
-             [HttpPost("register")]
+        [HttpPost("register")]
         public async Task<ActionResult<Film>> PostFilm(FilmCreation filmCreation)
         {
             // on créer un nouveau film avec les informations reçu
             Film film = new Film {
                 Id=filmCreation.id,
                 Title=filmCreation.Title,
-                Poster="poster",
-                IMDB="imdb",
-                dateDeSortie=2002
+                Poster=filmCreation.poster,
+                IMDB=filmCreation.IMBD,
+                dateDeSortie=filmCreation.dateDeSortie
                 
             };
             // on l'ajoute a notre contexte (BDD)
@@ -54,6 +87,23 @@ namespace PlateformeFilm.Controllers
             await _context.SaveChangesAsync();
             // on retourne un code 201 pour indiquer que la création a bien eu lieu
             return  Ok(new {message ="Film Bien Ajouté !",FilmName = film.Title});
+        }
+                //Supprimer les Données 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteFilm(int id)
+        {
+            // on récupère la film que l'on souhaite supprimer
+            Film film = await _context.Films.FindAsync(id);
+            if (film == null)
+            {
+                return NotFound();
+            }
+            // on indique a notre contexte que l'objet a été supprimé
+            _context.Films.Remove(film);
+            // on enregistre les modifications
+            await _context.SaveChangesAsync();
+            // on retourne un code 204 pour indiquer que la suppression a bien eu lieu
+            return NoContent();
         }
 
     }
