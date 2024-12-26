@@ -46,6 +46,21 @@ namespace PlateformeFilm.Controllers
             // on retourne l'utilisateur
             return Ok(films);
         }
+        [HttpGet("Search")]
+        public async Task<ActionResult<Film>> GetFilmSearch(string title)
+        {
+            // on récupère l'utilisateur correspondant a l'id
+            //var user = await _context.Users.FirstOrDefaultAsync(u =>u.Pseudo == userInfo.Pseudo);
+            var film = await _context.Films.FirstOrDefaultAsync(f=>f.Title==title);
+
+            if (film == null)
+            {
+                // return NotFound("Id n'est pas trouvable ! ");
+                return  Unauthorized("title Incorrect");
+            }
+            // on retourne l'utilisateur
+            return Ok(film);
+        }
 
 
 
