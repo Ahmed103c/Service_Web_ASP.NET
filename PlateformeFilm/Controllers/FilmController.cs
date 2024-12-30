@@ -61,8 +61,24 @@ namespace PlateformeFilm.Controllers
             // on retourne l'utilisateur
             return Ok(film);
         }
-
-
+        [HttpGet("Info")]
+        public async Task<ActionResult<IEnumerable<Film>>> GetFilmInfo([FromQuery] int[] ids)
+        {
+            var films = new List<Film>();
+            foreach (var id in ids) // mieux d'utiliser a chaque fois longueur
+            {
+                var film = await _context.Films.FindAsync(id);
+                if (film!=null)
+                {
+                    films.Add(film);
+                }
+            }
+            if (!films.Any())
+            {
+                return NotFound("Aucun film n'est trouvé");
+            }
+            return Ok(films);
+        }
 
 
 
