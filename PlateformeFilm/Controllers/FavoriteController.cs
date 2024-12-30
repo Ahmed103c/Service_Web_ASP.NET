@@ -64,6 +64,20 @@ namespace PlateformeFilm.Controllers
           
             return NoContent();
         }
+        [HttpGet("list/{UserId}")]
+        public async Task<ActionResult<IEnumerable<Favorite>>> GetFavorite_List_UserId(int UserId)
+        {
+            var favorites = await _context.Favorites
+                            .Where(f=>f.UserId==UserId)
+                            .ToListAsync();
+            if (!favorites.Any())
+            {
+                return NotFound("Aucun Utilisateur n'est trouvé");
+            }
+            return Ok(favorites);
+        }
+
+
     }
 
 }
