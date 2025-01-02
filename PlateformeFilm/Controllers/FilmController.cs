@@ -79,16 +79,6 @@ namespace PlateformeFilm.Controllers
             }
             return Ok(films);
         }
-
-
-
-
-
-
-
-
-
-
         public class FilmCreation
         {
             public int id{get;set;}
