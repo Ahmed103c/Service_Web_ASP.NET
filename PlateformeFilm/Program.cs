@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using PlateformeFilm.Models;
 using PlateformeFilm.data;
 using Microsoft.AspNetCore.Identity;
+using PlateformeFilm.Services;
 namespace PlateformeFilm;
 
 public class Program
@@ -19,7 +20,12 @@ public class Program
 
         //Injection de dépendance : ajout classe PasswordHasher
         builder.Services.AddScoped<PasswordHasher<User>>();
+        //Injection de dépendance : ajout HttpClient
+        builder.Services.AddHttpClient();
+        //Injection de dépendance : ajout classe OmdbService
+        builder.Services.AddSingleton<Omdbservice>();
 
+        
         //Connection au BDD
         builder.Services.AddDbContext<UserContext>();
         //Ajout Films et Favorites
